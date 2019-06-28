@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxy.dao.DangdangOrderDao">
+  <resultMap id="BaseResultMap" type="com.gxy.entity.DangdangOrder">
+    <id column="ORDER_ID"  property="orderId" />
+    <result column="ORDER_SSID"  property="orderSsid" />
+    <result column="ORDER_TOTALPRICE"  property="orderTotalprice" />
+    <result column="ORDER_STATE"  property="orderState" />
+    <result column="DD_USER_ID"  property="ddUserId" />
+    <result column="ORDER_CREATEDATE" property="orderCreatedate" />
+  </resultMap>
+  <insert id="insertOrder" parameterType="com.gxy.entity.DangdangOrder">
+    insert into DANGDANG_ORDER (ORDER_ID, ORDER_TOTALPRICE, 
+      ORDER_STATE, DD_USER_ID )
+    values (SEQ_ORDER.NEXTVAL,#{orderTotalprice}, #{orderState}, #{ddUserId})
+  </insert>
+  <!-- 查询登录用户的订单号 -->
+  <select id="seletOrderSsid" resultType="java.util.Map">
+  	SELECT T1.DD_USER_ID as "ddUserId",t2.order_ssid as "orderSsid" FROM DANGDANG_USER t1 left join 
+	dangdang_order t2 on t1.dd_user_id = t2.dd_user_id where t1.dd_user_id=#{ddUserId}
+  </select>
+</mapper>

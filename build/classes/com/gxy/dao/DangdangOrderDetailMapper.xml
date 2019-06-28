@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxy.dao.DangdangOrderDetailDao">
+  <resultMap id="BaseResultMap" type="com.gxy.entity.DangdangOrderDetail">
+    <id column="DETAIL_ID" property="detailId" />
+    <result column="DETAIL_SSID" property="detailSsid" />
+    <result column="DETAIL_PRODUCT_NAME" property="detailProductName" />
+    <result column="DETAIL_COUNT" property="detailCount" />
+    <result column="DETAIL_DDPRICE" property="detailDdprice" />
+    <result column="DD_PRODUCT_ID" property="ddProductId" />
+    <result column="ORDER_SSID" property="orderSsid" />
+    <result column="ADDRESS_ID" property="addressId" />
+    <result column="DD_USER_ID" property="ddUserId" />
+    <result column="DETAIL_CREATEDATE" property="detailCreatedate" />
+  </resultMap>
+  <insert id="insertOrderDetail" parameterType="com.gxy.entity.DangdangOrderDetail">
+    insert into DANGDANG_ORDER_DETAIL (DETAIL_ID, DETAIL_PRODUCT_NAME, 
+      DETAIL_COUNT, DETAIL_DDPRICE, DD_PRODUCT_ID, 
+      ORDER_SSID, ADDRESS_ID, DD_USER_ID)
+    values (SEQ_DETAIL.NEXTVAL, #{detailProductName}, 
+      #{detailCount}, #{detailDdprice}, #{ddProductId}, 
+      #{orderSsid}, #{addressId}, #{ddUserId})
+  </insert>
+</mapper>

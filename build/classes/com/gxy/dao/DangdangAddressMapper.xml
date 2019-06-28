@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxy.dao.DangdangAddressDao">
+  <resultMap id="BaseResultMap" type="com.gxy.entity.DangdangAddress">
+    <id column="ADDRESS_ID"  property="addressId" />
+    <result column="ADDRESS_RECEIVE_NAME"  property="addressReceiveName" />
+    <result column="ADDRESS_ADD"  property="addressAdd" />
+    <result column="ADDRESS_MOBILE"  property="addressMobile" />
+    <result column="ADDRESS_ZIPCODE"  property="addressZipcode" />
+    <result column="ADDRESS_STATE"  property="addressState" />
+    <result column="DD_USER_ID"  property="ddUserId" />
+    <result column="ADDRESS_CREATEDATE"  property="addressCreatedate" />
+  </resultMap>
+  <!-- 插入地址信息 -->
+  <insert id="insertAddress" parameterType="com.gxy.entity.DangdangAddress">
+    <selectKey keyProperty="addressId" order="BEFORE" resultType="int">
+    	select SEQ_dangaddress.Nextval as addressId from dual
+    </selectKey>
+    insert into DANGDANG_ADDRESS (ADDRESS_ID, ADDRESS_RECEIVE_NAME, ADDRESS_ADD, 
+      ADDRESS_MOBILE, ADDRESS_ZIPCODE, DD_USER_ID)
+    values (#{addressId}, #{addressReceiveName}, #{addressAdd}, 
+      #{addressMobile}, #{addressZipcode}, #{ddUserId})
+  </insert>
+  <!-- 查询该用户下的地址 -->
+  <select id="selectAddress" resultMap="BaseResultMap">
+  	SELECT * FROM DANGDANG_ADDRESS WHERE DD_USER_ID = #{ddUserId}
+  </select>
+  <select id="ChangeAddress" resultMap="BaseResultMap">
+  	SELECT * FROM DANGDANG_ADDRESS WHERE address_id = #{addressId}
+  </select>
+</mapper>

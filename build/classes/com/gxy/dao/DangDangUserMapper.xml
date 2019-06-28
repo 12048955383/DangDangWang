@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxy.dao.DangDangUserDao">
+  <resultMap id="BaseResultMap" type="com.gxy.entity.DangDangUser">
+    <id column="DD_USER_ID" jdbcType="INTEGER" property="ddUserId" />
+    <result column="DD_USER_EMAIL" jdbcType="VARCHAR" property="ddUserEmail" />
+    <result column="DD_USER_PASSWORD" jdbcType="VARCHAR" property="ddUserPassword" />
+    <result column="DD_USER_NICKNAME" jdbcType="VARCHAR" property="ddUserNickname" />
+    <result column="DD_USER_STATE" jdbcType="INTEGER" property="ddUserState" />
+    <result column="DD_USER_SALT" jdbcType="VARCHAR" property="ddUserSalt" />
+    <result column="DD_USER_ROLE" jdbcType="VARCHAR" property="ddUserRole" />
+    <result column="DD_USER_CREATE_DATE" jdbcType="TIMESTAMP" property="ddUserCreateDate" />
+  </resultMap>
+  <!-- 注册 -->
+  <insert id="insert">
+   insert into DANGDANG_USER (DD_USER_ID,DD_USER_EMAIL, DD_USER_PASSWORD, DD_USER_NICKNAME, DD_USER_SALT)
+     values (seq_danguser.nextval,#{dangdangUser.ddUserEmail,jdbcType=VARCHAR}, #{dangdangUser.ddUserPassword,jdbcType=VARCHAR},#{dangdangUser.ddUserNickname,jdbcType=VARCHAR},
+     #{dangdangUser.ddUserSalt})
+  </insert>
+  <!-- 登录 -->
+  <select id="selectByname" resultMap="BaseResultMap">
+    select * from DANGDANG_USER where DD_USER_EMAIL = #{ddUserEmail,jdbcType=VARCHAR}
+  </select>
+</mapper>

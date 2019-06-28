@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxy.dao.DangDangCategory1Dao">
+  <resultMap id="BaseResultMap" type="com.gxy.entity.DangDangCategory1">
+    <result column="DD_CATEGORY1_ID" jdbcType="INTEGER" property="ddCategory1Id" />
+    <result column="DD_CATEGORY1_NAME" jdbcType="VARCHAR" property="ddCategory1Name" />
+    <result column="DD_CATEGORY1_CREATE_DATE" jdbcType="TIMESTAMP" property="ddCategory1CreateDate" />
+  </resultMap>
+  <!-- 关联表查询 -->
+  <resultMap id="BaseResultMap1" type="com.gxy.entity.DangDangCategory1">
+    <result column="DD_CATEGORY1_ID" jdbcType="INTEGER" property="ddCategory1Id" />
+    <result column="DD_CATEGORY1_NAME" jdbcType="VARCHAR" property="ddCategory1Name" />
+    <result column="DD_CATEGORY1_CREATE_DATE" jdbcType="TIMESTAMP" property="ddCategory1CreateDate" />
+  	<collection  property="listCategory2"  ofType="com.gxy.entity.DangDangCategory2">
+  		<result column="DD_CATEGORY2_ID"  property="ddCategory2Id" />
+	    <result column="DD_CATEGORY2_NAME"  property="ddCategory2Name" />
+	    <result column="DD_CATEGORY1_ID"  property="ddCategory1Id" />
+	    <result column="DD_CATEGORY2_CREATE_DATE"  property="ddCategory2CreateDate" />
+  	</collection>
+  </resultMap>
+  <!-- 分类浏览 -->
+  <select id="selectByCategory" resultMap="BaseResultMap1" >
+       SELECT t1.dd_category1_id ,t1.dd_category1_name ,t2.dd_category2_id,t2.dd_category2_name  FROM 
+       DANGDANG_CATEGORY1 t1 left join DANGDANG_CATEGORY2 t2 on 
+       t1.DD_CATEGORY1_ID = t2.DD_CATEGORY1_ID 
+  </select>
+  <!-- 统计各类图书的数量 -->
+  <select id="selectCategory1" resultType="java.util.Map">
+  	select t2.dd_category1_id as "ddCategory1Id",count(*) as "ddCategory1Count" from dangdang_product t1 left join dangdang_category2 t2 
+         on t1.dd_category2_id = t2.dd_category2_id
+           group by t2.dd_category1_id
+  </select>
+</mapper>

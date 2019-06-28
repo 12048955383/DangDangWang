@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gxy.dao.DangDangProductDao">
+  <resultMap id="BaseResultMap" type="com.gxy.entity.DangDangProduct">
+    <id column="DD_PRODUCT_ID" jdbcType="INTEGER" property="ddProductId" />
+    <result column="DD_PRODUCT_NAME" jdbcType="VARCHAR" property="ddProductName" />
+    <result column="DD_PRODUCT_AUTHOR" jdbcType="VARCHAR" property="ddProductAuthor" />
+    <result column="DD_PRODUCT_IMG" jdbcType="VARCHAR" property="ddProductImg" />
+    <result column="DD_PRODUCT_PRESS" jdbcType="VARCHAR" property="ddProductPress" />
+    <result column="DD_PRODUCT_PRESSTIME" jdbcType="VARCHAR" property="ddProductPresstime" />
+    <result column="DD_PRODUCT_EDITION" jdbcType="VARCHAR" property="ddProductEdition" />
+    <result column="DD_PRODUCT_PRINTEGERTIME" jdbcType="VARCHAR" property="ddProductPrINTEGERtime" />
+    <result column="DD_PRODUCT_PRINTEGERCOUNT" jdbcType="INTEGER" property="ddProductPrINTEGERcount" />
+    <result column="DD_PRODUCT_ISBN" jdbcType="VARCHAR" property="ddProductIsbn" />
+    <result column="DD_PRODUCT_WORDCOUNT" jdbcType="VARCHAR" property="ddProductWordcount" />
+    <result column="DD_PRODUCT_PAGECOUNT" jdbcType="VARCHAR" property="ddProductPagecount" />
+    <result column="DD_PRODUCT_FORMAT" jdbcType="VARCHAR" property="ddProductFormat" />
+    <result column="DD_PRODUCT_PAPER" jdbcType="VARCHAR" property="ddProductPaper" />
+    <result column="DD_PRODUCT_PACK" jdbcType="VARCHAR" property="ddProductPack" />
+    <result column="DD_PRODUCT_PRICE" jdbcType="INTEGER" property="ddProductPrice" />
+    <result column="DD_PRODUCT_DDPRICE" jdbcType="INTEGER" property="ddProductDdprice" />
+    <result column="DD_PRODUCT_COUNT" jdbcType="INTEGER" property="ddProductCount" />
+    <result column="DD_PRODUCT_ADDTIME" jdbcType="TIMESTAMP" property="ddProductAddtime" />
+    <result column="DD_PRODUCT_RECOMMEND" jdbcType="VARCHAR" property="ddProductRecommend" />
+    <result column="DD_PRODUCT_BRIEF" jdbcType="VARCHAR" property="ddProductBrief" />
+    <result column="DD_PRODUCT_AUTHORBRIEF" jdbcType="VARCHAR" property="ddProductAuthorbrief" />
+    <result column="DD_PRODUCT_DIRECTORY" jdbcType="VARCHAR" property="ddProductDirectory" />
+    <result column="DD_PRODUCT_MEDIACOMMENT" jdbcType="VARCHAR" property="ddProductMediacomment" />
+    <result column="DD_PRODUCT_EXCERPT" jdbcType="VARCHAR" property="ddProductExcerpt" />
+    <result column="DD_CATEGORY2_ID" jdbcType="INTEGER" property="ddCategory2Id" />
+    <result column="DD_PRODUCT_CREATE_DATE" jdbcType="TIMESTAMP" property="ddProductCreateDate" />
+  </resultMap>
+  <!-- 热销图书 -->
+  <select id="selectByCount"  resultMap="BaseResultMap">
+      select * from( select ROWNUM RN,t1.* from 
+       (select * from DANGDANG_PRODUCT order by DD_PRODUCT_COUNT ASC)t1) where RN&lt;9
+  </select>
+  <!-- 热销图书详情页 -->
+  <select id="selectByid" resultMap="BaseResultMap">
+  	 SELECT * FROM DANGDANG_PRODUCT WHERE DD_PRODUCT_ID=#{ddProductId}
+  </select>
+  <!-- 推荐书籍 -->
+  <select id="selectAll" resultMap="BaseResultMap">
+ 	 select * from DANGDANG_PRODUCT where dd_product_id &lt;30
+  </select>
+  <!-- 最新上架 -->
+  <select id="selectByNew" resultMap="BaseResultMap">
+  	 select * from( select ROWNUM RN,t1.* from 
+       (select * from DANGDANG_PRODUCT order by DD_PRODUCT_ADDTIME DESC)t1) where RN&lt;9
+  </select>
+  <!-- 新书热卖榜 -->
+  <select id="selectByNewhot" resultMap="BaseResultMap">
+  	 select * from( select ROWNUM RN,t1.* from 
+       (select * from DANGDANG_PRODUCT order by DD_PRODUCT_PRINTTIME)t1) where RN>20
+  </select>
+  <!-- 新书热卖榜更多 -->
+  <select id="selectByNewhotMore" resultMap="BaseResultMap">
+  	 select * from( select ROWNUM RN,t1.* from 
+       (select * from DANGDANG_PRODUCT order by DD_PRODUCT_PRINTTIME)t1) where RN&lt;5
+  </select>
+  <!-- 查询，一、二级标题下所有图书 -->
+  <select id="selectByCategory1" resultMap="BaseResultMap">
+  	  SELECT t1.dd_category1_id,t1.dd_category2_id,t2.dd_product_id,t2.dd_product_name,t2.dd_product_author,t2.dd_product_img,t2.dd_product_press,t2.dd_product_presstime,t2.dd_product_price,t2.dd_product_ddprice
+ 	FROM DANGDANG_CATEGORY2 t1 LEFT JOIN DANGDANG_PRODUCT t2 ON t1.DD_CATEGORY2_ID = t2.DD_CATEGORY2_ID 
+  	<where>
+  		<if test="id &lt; 4 and id != 0 ">
+  			and t1.dd_category1_id = #{id}
+  		</if>
+  		<if test="id > 4 and id != 0 ">
+  			and t1.dd_category2_id = #{id}
+  		</if>
+  		<if test="ddProductName != null and ddProductName != '' ">
+  			and t2.DD_PRODUCT_NAME like '%${ddProductName}%'
+  		</if>
+  		<if test="ddProductAuthor !=null and ddProductAuthor != '' ">
+  			and t2.DD_PRODUCT_AUTHOR like '%${ddProductAuthor}%'
+  		</if>
+  		<if test="ddProductPress !=null and ddProductPress != '' ">
+  			and t2.DD_PRODUCT_PRESS like '%${ddProductPress}%'
+  		</if>
+  	</where>
+  </select>
+  <!-- 模糊查询，搜索 -->
+  <select id="selectByLike" resultMap="BaseResultMap">
+  	select * from dangdang_product 
+  	<where>
+  		<if test="ddProductName != null and ddProductName != '' ">
+  			and DD_PRODUCT_NAME like '%#{ddProductName}%'
+  		</if>
+  		<if test="ddProductAuthor !=null and ddProductAuthor != '' ">
+  			and DD_PRODUCT_AUTHOR like '%#{ddProductAuthor}%'
+  		</if>
+  		<if test="ddProductPress !=null and ddProductPress != '' ">
+  			and DD_PRODUCT_PRESS like '%#{ddProductPress}%'
+  		</if>
+  	</where>
+  </select>
+  <!-- 动态查询出版社  -->
+  <select id="selectByPress" resultType="java.lang.String">
+  	select distinct  DD_PRODUCT_PRESS from dangdang_product  order by DD_PRODUCT_PRESS
+  </select>
+</mapper>
